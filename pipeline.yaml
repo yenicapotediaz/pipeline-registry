@@ -1,0 +1,7 @@
+type: chart
+ - chart: authenticated-registry
+   timeout: 600
+   retries: 1
+   release: registry
+prod:
+ doDeploy: auto
