@@ -1,0 +1,48 @@
+# Default values for authenticated-registry.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+images:
+  auth: cesanta/docker_auth:1
+  pullPolicy: Always
+
+log:
+  verbocity: 2
+
+docker-auth: {}
+  # docker auth config, per https://github.com/cesanta/docker_auth/blob/master/examples/reference.yml
+docker-registry: {}
+  # docker-registry config, per https://github.com/kubernetes/charts/tree/master/stable/docker-registry
+
+service:
+  type: ClusterIP
+  port: 80
+
+ingress:
+  enabled: false
+  annotations: {}
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+  path: /
+  hosts:
+    - chart-example.local
+  tls: []
+  #  - secretName: chart-example-tls
+  #    hosts:
+  #      - chart-example.local
+
+resources:
+  limits:
+    cpu: 100m
+    memory: 128Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}

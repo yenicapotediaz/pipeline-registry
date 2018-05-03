@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: docker-auth-config
+type: Opaque
+data:
+  auth_config.yml: {{ b64enc (toYaml .Values.docker-auth) }}
