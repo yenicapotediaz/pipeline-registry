@@ -4,4 +4,4 @@ metadata:
   name: docker-auth-config
 type: Opaque
 data:
-  auth_config.yml: {{ b64enc (toYaml .Values.docker-auth) }}
+  auth_config.yml: {{ b64enc (toYaml .Values.dockerAuth) }}

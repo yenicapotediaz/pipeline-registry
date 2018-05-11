@@ -11,9 +11,9 @@ images:
 log:
   verbocity: 2
 
-docker-auth: {}
+dockerAuth: {}
   # docker auth config, per https://github.com/cesanta/docker_auth/blob/master/examples/reference.yml
-docker-registry: {}
+dockerRegistry: {}
   # docker-registry config, per https://github.com/kubernetes/charts/tree/master/stable/docker-registry
 
 service:
