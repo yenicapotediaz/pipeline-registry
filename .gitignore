@@ -1,3 +1,7 @@
+# charts should not be added from dependencies as well as requirements.lock
+charts/authenticated-registry/charts
+requirements.lock
+
 # Binaries for programs and plugins
 *.exe
 *.dll
