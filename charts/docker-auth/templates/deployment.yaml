@@ -1,32 +1,32 @@
-apiVersion: apps/v1beta2
+apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ template "authenticated-registry.fullname" . }}
+  name: {{ template "docker-auth.name" . }}
   labels:
-    app: {{ template "authenticated-registry.name" . }}
-    chart: {{ template "authenticated-registry.chart" . }}
+    app: {{ template "docker-auth.fullname" . }}
+    chart: {{ template "docker-auth.chart" . }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      app: {{ template "authenticated-registry.name" . }}
+      app: {{ template "docker-auth.fullname" . }}
       release: {{ .Release.Name }}
   template:
     metadata:
       labels:
-        app: {{ template "authenticated-registry.name" . }}
+        app: {{ template "docker-auth.fullname" . }}
         release: {{ .Release.Name }}
     spec:
       containers:
-        - name: {{ .Chart.Name }}
-          image: {{ .Values.images.auth }}
-          imagePullPolicy: {{ .Values.images.pullPolicy }}
-          command: ['--v={{ .Values.log.verbocity }}', '/config/auth_config.yml']
+        - name: "docker-auth"
+          image: {{ .Values.imageRepository }}
+          imagePullPolicy: {{ .Values.imagePullPolicy }}
+          command: ['--v={{ .Values.logVerbocity }}', '/config/auth_config.yml']
           ports:
             - name: http
-              containerPort: 5001
+              containerPort: {{ .Values.containerPort }}
               protocol: TCP
           livenessProbe:
             httpGet:
@@ -37,13 +37,22 @@ spec:
               path: /
               port: http
           volumeMounts:
-            - name: config-volume
+            - name: config-secret
               mountPath: /config
+{{- if .Values.authCertSecret }}
+            - name: auth-cert-secret
+              mountPath: {{ .Values.authCertMount}}
+{{- end }}
           resources:
       volumes:
-        - name: config-volume
+        - name: config-secret
           secret:
             secretName: docker-auth-config
+{{- if .Values.authCertSecret }}
+        - name: auth-cert-secret
+          secret:
+            secretName: {{ .Values.authCertSecret}}
+{{- end }}
 {{ toYaml .Values.resources | indent 12 }}
     {{- with .Values.nodeSelector }}
       nodeSelector:

@@ -4,12 +4,20 @@
 
 replicaCount: 1
 
-image:
-  repository: cesanta/docker_auth:1
-  pullPolicy: Always
 
-log:
-  verbosity: 2
+imageRepository: cesanta/docker_auth:1
+imagePullPolicy: Always
+
+logVerbosity: 2
+
+containerPort: 5001
+
+authConfig: {}
+
+authCertSecret:
+
+authCertMount: /etc/secret
+
 
 service:
   type: ClusterIP
