@@ -1,4 +1,4 @@
-apiVersion: apps/v1
+apiVersion: apps/v1beta2
 kind: Deployment
 metadata:
   name: {{ template "docker-auth.name" . }}
@@ -23,7 +23,7 @@ spec:
         - name: "docker-auth"
           image: {{ .Values.imageRepository }}
           imagePullPolicy: {{ .Values.imagePullPolicy }}
-          command: ['--v={{ .Values.logVerbocity }}', '/config/auth_config.yml']
+          command: ['/docker_auth/auth_server', '-v', '{{ .Values.logVerbosity }}', '/config/auth_config.yml']
           ports:
             - name: http
               containerPort: {{ .Values.containerPort }}
@@ -39,12 +39,17 @@ spec:
           volumeMounts:
             - name: config-secret
               mountPath: /config
+            - name: utility-storage
+              mountPath: /tokens
 {{- if .Values.authCertSecret }}
             - name: auth-cert-secret
               mountPath: {{ .Values.authCertMount}}
 {{- end }}
           resources:
+{{ toYaml .Values.resources | indent 12 }}
       volumes:
+        - name: utility-storage
+          emptyDir: {}
         - name: config-secret
           secret:
             secretName: docker-auth-config
@@ -53,7 +58,6 @@ spec:
           secret:
             secretName: {{ .Values.authCertSecret}}
 {{- end }}
-{{ toYaml .Values.resources | indent 12 }}
     {{- with .Values.nodeSelector }}
       nodeSelector:
 {{ toYaml . | indent 8 }}
