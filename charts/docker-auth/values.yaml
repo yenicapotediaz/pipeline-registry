@@ -14,7 +14,7 @@ containerPort: 5001
 
 authConfig: {}
 
-authCertSecret:
+authCertSecret: auth-cert-secret
 
 authCertMount: /etc/secret
 
@@ -38,11 +38,11 @@ ingress:
 
 resources:
   limits:
-   cpu: 100m
-   memory: 128Mi
+    cpu: 100m
+    memory: 128Mi
   requests:
-   cpu: 100m
-   memory: 128Mi
+    cpu: 100m
+    memory: 128Mi
 
 nodeSelector: {}
 
